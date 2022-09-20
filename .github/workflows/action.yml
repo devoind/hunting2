@@ -45,5 +45,4 @@ jobs:
           script: |
             cd flask_app_course_work3
             echo ${{ secrets.PASSWORD }} | sudo -S docker-compose up -d
-
-
+            
