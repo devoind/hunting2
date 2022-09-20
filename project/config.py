@@ -1,7 +1,7 @@
 import base64
 import os
 from pathlib import Path
-from typing import Type, List
+from typing import Type
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,8 +39,6 @@ class DevelopmentConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://$DB_USER:$DB_PASSWORD@postgres/$DB_NAME"
-    SWAGGER_SUPPORTED_SUBMIT_METHODS: List[str] = []
 
 
 class ConfigFactory:
