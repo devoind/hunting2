@@ -10,7 +10,7 @@ services:
       migrations:
         condition: service_completed_successfully
     volumes:
-      - ./docker_config.py:/code/default_config.py
+      - ./docker_ci_config.py:/code/default_config.py
   migrations:
     image: devoind/flask-app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
