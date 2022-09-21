@@ -12,15 +12,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: devoind/app:latest
     restart: always
     env_file:
       - ./.env

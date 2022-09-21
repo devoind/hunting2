@@ -1,10 +1,17 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-WORKDIR /code
+WORKDIR /opt/hunting
+
+RUN groupadd --system service && useradd --system -g service api
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends curl \
+    && apt-get autoclean && apt-get autoremove \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY run.py .
-COPY project project
-ENV FLASK_APP=run.py
+RUN python3 -m pip install -r requirements.txt
+COPY . .
 
-CMD flask run -h 0.0.0.0 -p 80
+USER api
+
+ENTRYPOINT ["bash", "entrypoint.sh"]

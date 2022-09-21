@@ -1,9 +1,14 @@
 import base64
 import os
+from enum import Enum
 from pathlib import Path
-from typing import Type
+from typing import Type, List
+
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
 
 
 class BaseConfig:
@@ -39,20 +44,21 @@ class DevelopmentConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = "postgresql://{username}:{password}@{host}:{port}/{db_name}".format(
+        username=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        host=os.getenv("POSTGRES_HOST", '127.0.0.1'),
+        port=int(os.getenv("POSTGRES_PORT", 5432)),
+        db_name=os.getenv("POSTGRES_DB")
+    )
+    SWAGGER_SUPPORTED_SUBMIT_METHODS: List[str] = []
 
 
-class ConfigFactory:
-    flask_env = os.getenv('FLASK_ENV', 'development')
-
-    @classmethod
-    def get_config(cls) -> Type[BaseConfig]:
-        if cls.flask_env == 'development':
-            return DevelopmentConfig
-        elif cls.flask_env == 'production':
-            return ProductionConfig
-        elif cls.flask_env == 'testing':
-            return TestingConfig
-        raise NotImplementedError
+class Config(Enum):
+    development = DevelopmentConfig
+    testing = TestingConfig
+    production = ProductionConfig
 
 
-config = ConfigFactory.get_config()
+def get_config(config_name: str):
+    return getattr(Config, config_name, Config.production).value

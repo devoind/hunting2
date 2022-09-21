@@ -1,0 +1,9 @@
+.gitignore
+.github
+.mypy_cache
+.pytest_cache
+tests
+venv
+.flake8
+mypy.ini
+Procfile
